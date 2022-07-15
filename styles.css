@@ -15,3 +15,12 @@
     align-items: center;
 }
 
+
+.screen {
+    border: 1px solid black;
+    min-height: 50px;
+}
+button {
+    height: 50px;
+    width: 25px;
+}
