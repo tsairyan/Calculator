@@ -1,177 +1,146 @@
-var input1 = ""; //Will be the first input
-var b; //Will set this to input once and operation is pressed
+var curr = ""; //Will be the first input
+var stored; //Will set this to input once and operation is pressed
 var userOperation = "";
-const screen = document.querySelector(".screen");
+
 const nums = document.querySelectorAll(".num");
 const opers = document.querySelectorAll(".oper");
 const equal = document.querySelector(".equal");
-const calculator = document.querySelector(".calculator");
 
+var ans;
 
-const container = document.querySelector(".container");
-let tracker = [];
+//Display
+const screen = document.querySelector(".screen");
 
-
-var subDisplay = document.createElement("div");
+const subDisplay = document.createElement("div");
 subDisplay.classList.add("subDisplay");
+subDisplay.textContent = "";
+subDisplay.style.fontSize = "12px";
+subDisplay.style.minHeight = "15px";
 screen.appendChild(subDisplay);
-subDisplay.textContent = "0"; //tbc
-subDisplay.style.fontSize = "14px";
 
-var display = document.createElement("div");
+const display = document.createElement("div");
 display.classList.add("display");
+display.style.fontSize = "20px";
+display.textContent = "0";
 screen.appendChild(display);
-display.textContent = "0"; //tbc
-display.style.fontSize = "22px";
-
-
-
-
-let repeat = false;
-
-
+function add(a, b) {
+    return parseFloat(a) + parseFloat(b);
+}
+function subtract(a, b) {
+    return parseFloat(a)-parseFloat(b);
+}
+function multiply(a, b){
+    return parseFloat(a) * parseFloat(b);
+}
+function divide (a, b) {
+    return parseFloat(a) / parseFloat(b);
+}
+var check = false;
+var dynamicSub = "";
+//Pressing Numbers
+var arrayTracker = [];
 nums.forEach(num => {
     num.addEventListener("click", function() {
-        input1 = input1 + num.textContent;
-        display.textContent = input1;
+        arrayTracker.push(num.textContent);
+        curr += num.textContent;
+        display.textContent = curr;
     }, false);
 });
-let counter = 0;
-let temp = 0;
-let pressed = false;
-let result = "";
-opers.forEach(oper => {
-    oper.addEventListener("click", function() {
-        if (repeat) {
-            subDisplay.textContent = ans;
-            switch (userOperation) {
-                
-                case '+': 
-                b = add(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-                case '-':
-                b = subtract(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-                case '*':
-                b = multiply(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-                case '/':
-                b = divide(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-        
-            }
-            input1 = "";
-            display.textContent = ""
-        } else if (!pressed) {
-            userOperation = oper.textContent;
-            b = input1;
-            input1 = "";
-            pressed = true;
-            subDisplay.textContent = b + " " + oper.textContent;
-        } else {
-  
-            switch (userOperation) {
-                
-                case '+': 
-                b = add(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-                case '-':
-                b = subtract(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-                case '*':
-                b = multiply(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-                case '/':
-                b = divide(input1, b);
-                subDisplay.textContent = b + " " + userOperation;
-                break;
-        
-            }
-            input1 = "";
-            display.textContent = ""
+
+const decimal = document.querySelector(".decimal");
+    decimal.addEventListener("click", function() {
+        if (!display.textContent.includes(".")) {
+            arrayTracker.push("progress");
+            curr += decimal.textContent;
+            display.textContent = curr;
         }
 
+    });
+var first = true;
+//Pressing an operation button
+//Stored is the number that gets shifted
+var previousOper = "";
 
+opers.forEach(oper => {
+    oper.addEventListener("click", function() {
+    
+        if (arrayTracker[arrayTracker.length - 1] !== "progress") {
 
+            arrayTracker.push("progress");
+             if (first && previousOper === "") {
+                stored = curr;
+                curr = "";
+                userOperation = oper.textContent;
+                dynamicSub = stored + " " + userOperation
+                subDisplay.textContent = dynamicSub;
+                previousOper = userOperation;
+                
+            } else {
+                switch (previousOper) {
+                    case '+': 
+                    ans = add(stored, curr);
+                    break;
+                    case '-':
+                    ans = subtract(stored, curr);
+                    break;
+                    case '*':
+                    ans = multiply(stored, curr);
+                    break;
+                    case '/':
+                    ans = divide(stored, curr);
+                    break;
+            
+                }
+                previousOper = oper.textContent;
+                dynamicSub = ans + " " + previousOper;
+                display.textContent = ans;
+                temp = ans;
+                stored = temp;
+                userOperation = oper.textContent;
+                subDisplay.textContent = dynamicSub;
+                curr = "";
 
-        
-        
-        
+                
+            }
+
+        }
+
     });
 });
 
+
+
+//Pressing =
 equal.addEventListener("click", operation, false);
-
-let ans = 0;
-
 function operation()  {
-    repeat = true;
-    pressed = false;
-    switch (userOperation) {
-        
-        case '+': 
-        ans = add(b, input1);
-        display.textContent = ans;
-        subDisplay.textContent += input1 + " =";
-        return (ans);
-        
-        break;
-        case '-':
-        ans = subtract(b, input1);
-        display.textContent = ans;
-        subDisplay.textContent += input1 + " =";
-        return ans;
-        break;
-        case '*':
-        ans = multiply(b, input1);
-        display.textContent = ans;
-        subDisplay.textContent += input1 + " =";
-        return ans;
-        break;
-        case '/':
-        ans = divide(b, input1);
-        display.textContent = ans;
-        subDisplay.textContent += input1 + " =";
-        return ans;
-        break;
+    if (arrayTracker[arrayTracker.length - 1] !== "progress" && arrayTracker[arrayTracker.length - 1] !== "equal") {
+        arrayTracker.push("equal");
+        first = true;
+        previousOper = "";
 
+        switch (userOperation) {
+            case '+': 
+            ans = add(stored, curr);
+            break;
+            case '-':
+            ans = subtract(stored, curr);
+            break;
+            case '*':
+            ans = multiply(stored, curr);
+            break;
+            case '/':
+            ans = divide(stored, curr);
+            break;
+
+        }
+
+        dynamicSub += " " + curr + " =";
+        subDisplay.textContent = dynamicSub;
+        temp = ans;
+        curr = ans;
+        display.textContent = ans;
     }
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function add(a, b) {
-    
-    return parseInt(a) + parseInt(b);
-}
-function subtract(a, b) {
-    return parseInt(a)-parseInt(b);
-}
-function multiply(a, b){
-    return parseInt(a) * parseInt(b);
-}
-function divide (a, b) {
-    return parseInt(a) / parseInt(b);
-}
 
