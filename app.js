@@ -14,20 +14,26 @@ const screen = document.querySelector(".screen");
 const subDisplay = document.createElement("div");
 subDisplay.classList.add("subDisplay");
 subDisplay.textContent = "";
-subDisplay.style.fontSize = "12px";
-subDisplay.style.minHeight = "15px";
+subDisplay.style.fontSize = "24px";
+// subDisplay.style.minHeight = "30px";
+subDisplay.style.marginRight = "5px";
 screen.appendChild(subDisplay);
 
 const display = document.createElement("div");
 display.classList.add("display");
-display.style.fontSize = "20px";
+display.style.fontSize = "50px";
+// display.style.minHeight = "70px";
+display.style.maxWidth = "350px";
+display.style.marginRight = "5px";
+display.style.overflowWrap = "break-word";
+
 display.textContent = "0";
 screen.appendChild(display);
 function add(a, b) {
     return parseFloat(a) + parseFloat(b);
 }
 function subtract(a, b) {
-    return parseFloat(a)-parseFloat(b);
+    return parseFloat(a) - parseFloat(b);
 }
 function multiply(a, b){
     return parseFloat(a) * parseFloat(b);
@@ -41,9 +47,10 @@ var dynamicSub = "";
 var arrayTracker = [];
 nums.forEach(num => {
     num.addEventListener("click", function() {
-        arrayTracker.push(num.textContent);
-        curr += num.textContent;
-        display.textContent = curr;
+            arrayTracker.push(num.textContent);
+            curr += num.textContent;
+            display.textContent = curr;
+        
     }, false);
 });
 
@@ -144,3 +151,18 @@ function operation()  {
 }
 
 
+const clear = document.querySelector(".clear");
+clear.addEventListener("click", function() {
+    subDisplay.textContent ="";
+    display.textContent = "0";
+    dynamicSub = "";
+    curr = ""; 
+    stored; 
+    userOperation = "";
+    ans;
+    check = false;
+    dynamicSub = "";
+    arrayTracker = [];
+    first = true;
+    previousOper = "";
+});
