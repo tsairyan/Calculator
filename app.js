@@ -36,10 +36,10 @@ function subtract(a, b) {
     return parseFloat(a) - parseFloat(b);
 }
 function multiply(a, b){
-    return parseFloat(a) * parseFloat(b);
+    return Math.round((parseFloat(a) * parseFloat(b)) * 100000) / 100000;
 }
 function divide (a, b) {
-    return parseFloat(a) / parseFloat(b);
+    return Math.round((parseFloat(a) / parseFloat(b)) * 100000) / 100000;
 }
 var check = false;
 var dynamicSub = "";
